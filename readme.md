@@ -11,3 +11,9 @@ Results:
 - Stack allocation: ~35ns  
 - Raw pointer allocation: ~600ns  
 - Smart pointer allocation: ~1200ns  
+
+
+### Day 3
+Why shared_ptr is a massive bottleneck compared to unique_ptr?  
+std::unique_ptr is the sole owner, just a raw pointer wrapped in RAII no extra footprint.  
+std::shared_ptr is a shared owner, it allocates a hidden Control Block on the heap to track all the ref counts, every time there is a copy on the shared_ptr it triggers an internal atomic increment (something called xadd at the CPU level(?)) These atomic increments will stall the CPU pipeline.  
